@@ -1,0 +1,31 @@
+<input id="session" placeholder="session" type="text" />
+<input id="user" placeholder="user" type="text" />
+<button onclick="connect()">Connect</button>
+<br>
+<input id="input" type="text" />
+<button onclick="send()">Send</button>
+<pre id="output"></pre>
+<script>
+    var input = document.getElementById("input");
+    var session = document.getElementById("session");
+    var user = document.getElementById("user");
+    var output = document.getElementById("output");
+    var socket = null;
+
+    function connect() {
+        socket = new WebSocket("ws://" + window.location.hostname + ":8080/chat?session=" + session.value + "&user=" + user.value);
+
+        socket.onopen = function () {
+            output.innerHTML += "Status: Connected\n";
+        };
+
+        socket.onmessage = function (e) {
+            output.innerHTML += "Server: " + e.data + "\n";
+        };
+    }
+
+    function send() {
+        socket.send(input.value);
+        input.value = "";
+    }
+</script>
